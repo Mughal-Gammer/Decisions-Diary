@@ -230,7 +230,7 @@ class _AddDecisionScreenState extends State<AddDecisionScreen> {
                               ),
                               Icon(
                                 Icons.calendar_today,
-                                color: Theme.of(context).primaryColor,
+
                                 size: 20,
                               ),
                             ],
@@ -353,7 +353,7 @@ class _AddDecisionScreenState extends State<AddDecisionScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    backgroundColor: Colors.deepOrange,
+                    backgroundColor: Colors.blue,
                     foregroundColor: Colors.white,
                   ),
                   child: _isSaving

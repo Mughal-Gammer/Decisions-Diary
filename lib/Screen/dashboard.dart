@@ -177,7 +177,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               TextFormField(
                                 controller: _finalOutcomeController,
                                 maxLines: 3,
+                                style: TextStyle(color: Colors.black),
                                 decoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: Colors.white,
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
@@ -188,15 +191,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               Row(
                                 children: [
                                   Expanded(
-                                    child: OutlinedButton(
-                                      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.orange)),
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(shadowColor:  Colors.amber, ),
                                       onPressed: () => setModalState(() => _isEditing = false),
-                                      child: const Text('Cancel'),
-                                    ),
+            child: const Text('Cancel'),)
                                   ),
                                   const SizedBox(width: 16),
                                   Expanded(
                                     child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(shadowColor:  Colors.amber, ),
                                       onPressed: () async {
                                         setModalState(() => _isSaving = true);
                                         final user = _auth.currentUser;
@@ -246,6 +249,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               decision.finalOutcome?.isNotEmpty == true
                                   ? decision.finalOutcome!
                                   : 'Not recorded yet',
+                                  style: TextStyle(color: Colors.black),
                             ),
                           ),
                       ],
@@ -254,6 +258,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(shadowColor:  Colors.white, ),
                         onPressed: () => Navigator.pop(context),
                         child: const Text('Close'),
                       ),
@@ -582,7 +587,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.orange,
         onPressed: () => _navigateToAddDecision(context),
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add,color: Colors.white,),
       ),
     );
   }
