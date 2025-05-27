@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import '../widgets/Model class new.dart';
+import '../widgets/ThemeNotifier.dart';
 import 'Add Decisions.dart';
 import 'login page.dart';
 
@@ -137,9 +139,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     const SizedBox(height: 8),
                     Text(
                       DateFormat('MMMM d, yyyy').format(decision.date),
-                      style: TextStyle(
-                        color: Colors.grey.shade600,
-                      ),
+
                     ),
                     const SizedBox(height: 16),
                     _buildDetailSection('Reason', decision.reason),
@@ -159,13 +159,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               'Final Outcome',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Colors.grey.shade700,
+
                               ),
                             ),
                             if (!_isEditing)
                               TextButton(
                                 onPressed: () => setModalState(() => _isEditing = true),
-                                child: const Text('Edit'),
+                                child: const Text('Edit',style: TextStyle(color: Colors.orange),),
                               ),
                           ],
                         ),
@@ -188,6 +188,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 children: [
                                   Expanded(
                                     child: OutlinedButton(
+                                      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.orange)),
                                       onPressed: () => setModalState(() => _isEditing = false),
                                       child: const Text('Cancel'),
                                     ),
@@ -274,7 +275,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           title,
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: Colors.grey.shade700,
+
           ),
         ),
         const SizedBox(height: 8),
@@ -470,6 +471,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
         centerTitle: false,
         elevation: 0,
         actions: [
+          Consumer<ThemeNotifier>(
+            builder: (context, themeNotifier, child) {
+              return IconButton(
+                icon: Icon(
+                  themeNotifier.themeMode == ThemeMode.light
+                      ? Icons.light_mode
+                      : Icons.dark_mode,
+                ),
+                onPressed: () {
+                  themeNotifier.toggleTheme();
+                },
+                tooltip: 'Toggle Theme',
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.filter_list),
             onPressed: () {

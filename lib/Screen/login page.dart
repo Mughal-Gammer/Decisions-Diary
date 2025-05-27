@@ -237,30 +237,33 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       SizedBox(height: 24),
                       Center(
-                        child: Text.rich(
-                          TextSpan(
-                            text: "Don't have an account? ",
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey.shade700,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Don't have an account? ",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey.shade700,
+                              ),
                             ),
-                            children: [
-                              TextSpan(
-                                text: 'Sign Up',
+                            TextButton(
+                              onPressed: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (_) => SignUpPage()));
+                              },
+
+                              child: Text(
+                                'Sign Up',
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: Colors.blue,
                                   fontWeight: FontWeight.w600,
                                 ),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    Navigator.push(context, MaterialPageRoute(builder: (_) => SignUpPage()));
-                                  },
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
+
                       SizedBox(height: 16),
                     ],
                   ),

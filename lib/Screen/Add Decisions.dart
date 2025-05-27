@@ -353,7 +353,7 @@ class _AddDecisionScreenState extends State<AddDecisionScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    backgroundColor: Theme.of(context).primaryColor,
+                    backgroundColor: Colors.deepOrange,
                     foregroundColor: Colors.white,
                   ),
                   child: _isSaving

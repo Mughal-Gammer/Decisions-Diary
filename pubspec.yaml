@@ -38,6 +38,7 @@ dependencies:
   firebase_auth:
   firebase_database:
   intl:
+  provider:
 
 dev_dependencies:
   flutter_test:

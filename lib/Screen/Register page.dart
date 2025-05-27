@@ -380,30 +380,31 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                       ),
                       SizedBox(height: 24),
-                      Center(
-                        child: Text.rich(
-                          TextSpan(
-                            text: "Already have an account? ",
-                            style: TextStyle(
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Already have an account?',
+                            style:TextStyle(
                               fontSize: 14,
                               color: Colors.grey.shade700,
-                            ),
-                            children: [
-                              TextSpan(
-                                text: 'Sign In',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.blue,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    Navigator.push(context, MaterialPageRoute(builder: (_) => LoginPage()));
-                                  },
-                              ),
-                            ],
+                              ) ,),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (_) => LoginPage()),
+                              );
+                            },
+                            child: Text('Sign In', style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+
+
+                            )),
+
+
                           ),
-                        ),
+                        ],
                       ),
 
                     ],
