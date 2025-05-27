@@ -72,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
             child:
             Container(
               decoration: BoxDecoration(
-                color: Colors.blue.shade900,
+                color: Color(0xFF3A4359),
 
               ),
 
@@ -80,23 +80,10 @@ class _LoginPageState extends State<LoginPage> {
           ),
 
 
-          Center(
-            child: SingleChildScrollView(
-              child: Container(
-                width: width > 600 ? width * 0.5 : width * 0.85,
-                padding: EdgeInsets.all(24.0),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.95),
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 20,
-                      spreadRadius: 5,
-                      offset: Offset(0, 10),
-                    ),
-                  ],
-                ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30),
+            child: Center(
+              child: SingleChildScrollView(
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -106,14 +93,14 @@ class _LoginPageState extends State<LoginPage> {
                       Center(
                         child: Column(
                           children: [
-                            Icon(Icons.account_circle, size: 60, color: Colors.blue),
+                            Icon(Icons.account_circle, size: 100, color: Colors.orange),
                             SizedBox(height: 16),
                             Text(
                               'Welcome Back',
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black87,
+                                color: Colors.orange,
                               ),
                             ),
                             SizedBox(height: 8),
@@ -121,7 +108,7 @@ class _LoginPageState extends State<LoginPage> {
                               'Sign in to continue',
                               style: TextStyle(
                                 fontSize: 14,
-                                color: Colors.grey.shade600,
+                                color: Colors.white,
                               ),
                             ),
                           ],
@@ -134,7 +121,7 @@ class _LoginPageState extends State<LoginPage> {
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
-                          color: Colors.black87,
+                          color: Colors.orange,
                         ),
                       ),
                       SizedBox(height: 8),
@@ -143,9 +130,10 @@ class _LoginPageState extends State<LoginPage> {
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                           hintText: 'Enter your email',
-                          prefixIcon: Icon(Icons.email, color: Colors.grey),
+                          hintStyle: TextStyle(color: Colors.white ),
+                          prefixIcon: Icon(Icons.email, color: Colors.white),
                           filled: true,
-                          fillColor: Colors.grey.withOpacity(0.1),
+                          fillColor: Colors.grey.withOpacity(0.15),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide.none,
@@ -166,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
-                          color: Colors.black87,
+                          color: Colors.orange,
                         ),
                       ),
                       SizedBox(height: 8),
@@ -175,7 +163,8 @@ class _LoginPageState extends State<LoginPage> {
                         obscureText: _obscureText,
                         decoration: InputDecoration(
                           hintText: 'Enter your password',
-                          prefixIcon: Icon(Icons.lock, color: Colors.grey),
+                          hintStyle: TextStyle(color: Colors.white ),
+                          prefixIcon: Icon(Icons.lock, color: Colors.white),
                           suffixIcon: IconButton(
                             onPressed: () {
                               setState(() {
@@ -184,11 +173,11 @@ class _LoginPageState extends State<LoginPage> {
                             },
                             icon: Icon(
                               _obscureText ? Icons.visibility : Icons.visibility_off,
-                              color: Colors.black26,
+                              color: Colors.blue,
                             ),
                           ),
                           filled: true,
-                          fillColor: Colors.grey.withOpacity(0.1),
+                          fillColor: Colors.grey.withOpacity(0.15),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide.none,
@@ -244,7 +233,7 @@ class _LoginPageState extends State<LoginPage> {
                               "Don't have an account? ",
                               style: TextStyle(
                                 fontSize: 14,
-                                color: Colors.grey.shade700,
+                                color: Colors.white,
                               ),
                             ),
                             TextButton(
@@ -257,6 +246,7 @@ class _LoginPageState extends State<LoginPage> {
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
+                                  color: Colors.orange,
                                 ),
                               ),
                             ),

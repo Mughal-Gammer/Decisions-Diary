@@ -115,7 +115,7 @@ class _SignUpPageState extends State<SignUpPage> {
           Positioned.fill(
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.blue.shade900,
+                color: Color(0xFF3A4359),
 
               ),
 
@@ -123,23 +123,10 @@ class _SignUpPageState extends State<SignUpPage> {
           ),
 
           // SignUp form
-          Center(
-            child: SingleChildScrollView(
-              child: Container(
-                width: width > 600 ? width * 0.5 : width * 0.85,
-                padding: EdgeInsets.all(24.0),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.95),
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 20,
-                      spreadRadius: 5,
-                      offset: Offset(0, 10),
-                    ),
-                  ],
-                ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30),
+            child: Center(
+              child: SingleChildScrollView(
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -149,7 +136,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       Center(
                         child: Column(
                           children: [
-                            Icon(Icons.account_circle, size: 60, color: Colors.blue),
+                            Icon(Icons.account_circle, size: 100, color: Colors.orange),
                             SizedBox(height: 8),
 
 
@@ -157,7 +144,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               'Sign Up to continue',
                               style: TextStyle(
                                 fontSize: 14,
-                                color: Colors.grey.shade600,
+                                color: Colors.white,
                               ),
                             ),
                           ],
@@ -169,7 +156,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
-                          color: Colors.black87,
+                          color: Colors.orange,
                         ),
                       ),
                       SizedBox(height: 8),
@@ -177,9 +164,10 @@ class _SignUpPageState extends State<SignUpPage> {
                         controller: _username,
                         decoration: InputDecoration(
                           hintText: 'User Name...',
-                          prefixIcon: Icon(Icons.person, color: Colors.grey),
+                          hintStyle: TextStyle(color: Colors.white),
+                          prefixIcon: Icon(Icons.person, color: Colors.white),
                           filled: true,
-                          fillColor: Colors.grey.withOpacity(0.1),
+                          fillColor: Colors.grey.withOpacity(0.15),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide.none,
@@ -199,7 +187,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
-                          color: Colors.black87,
+                          color: Colors.orange,
                         ),
                       ),
                       SizedBox(height: 8),
@@ -207,9 +195,10 @@ class _SignUpPageState extends State<SignUpPage> {
                         controller: _email,
                         decoration: InputDecoration(
                           hintText: 'Example@gmail.com',
-                          prefixIcon: Icon(Icons.email, color: Colors.grey),
+                          hintStyle: TextStyle(color: Colors.white ),
+                          prefixIcon: Icon(Icons.email, color: Colors.white),
                           filled: true,
-                          fillColor: Colors.grey.withOpacity(0.1),
+                          fillColor: Colors.grey.withOpacity(0.15),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide.none,
@@ -222,13 +211,14 @@ class _SignUpPageState extends State<SignUpPage> {
                           return null;
                         },
                       ),
+                      SizedBox(height: 8,),
                       // Password
                       Text(
                         'Password',
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
-                          color: Colors.black87,
+                          color: Colors.orange,
                         ),
                       ),
                       SizedBox(height: 8),
@@ -238,7 +228,8 @@ class _SignUpPageState extends State<SignUpPage> {
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                           hintText: 'PassW@rd123',
-                          prefixIcon: Icon(Icons.lock, color: Colors.grey),
+                          hintStyle: TextStyle(color: Colors.white ),
+                          prefixIcon: Icon(Icons.lock, color: Colors.white),
                           suffixIcon: IconButton(
                             onPressed: () {
                               setState(() {
@@ -247,11 +238,11 @@ class _SignUpPageState extends State<SignUpPage> {
                             },
                             icon: Icon(
                               _obscureText ? Icons.visibility : Icons.visibility_off,
-                              color: Colors.black26,
+                              color: Colors.blue,
                             ),
                           ),
                           filled: true,
-                          fillColor: Colors.grey.withOpacity(0.1),
+                          fillColor: Colors.grey.withOpacity(0.15),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide.none,
@@ -272,7 +263,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
-                          color: Colors.black87,
+                          color: Colors.orange,
                         ),
                       ),
                       SizedBox(height: 8),
@@ -281,7 +272,8 @@ class _SignUpPageState extends State<SignUpPage> {
                         obscureText: _obscureText1,
                         decoration: InputDecoration(
                           hintText: 'Confirm Password',
-                          prefixIcon: Icon(Icons.lock, color: Colors.grey),
+                          hintStyle: TextStyle(color: Colors.white ),
+                          prefixIcon: Icon(Icons.lock, color: Colors.white),
                           suffixIcon: IconButton(
                             onPressed: () {
                               setState(() {
@@ -290,11 +282,11 @@ class _SignUpPageState extends State<SignUpPage> {
                             },
                             icon: Icon(
                               _obscureText1 ? Icons.visibility : Icons.visibility_off,
-                              color: Colors.black26,
+                              color: Colors.blue,
                             ),
                           ),
                           filled: true,
-                          fillColor: Colors.grey.withOpacity(0.1),
+                          fillColor: Colors.grey.withOpacity(0.15),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide.none,
@@ -319,7 +311,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
-                          color: Colors.black87,
+                          color: Colors.orange,
                         ),
                       ),
                       SizedBox(height: 8),
@@ -327,9 +319,10 @@ class _SignUpPageState extends State<SignUpPage> {
                         controller: _phone,
                         decoration: InputDecoration(
                           hintText: '03001234567',
-                          prefixIcon: Icon(Icons.phone, color: Colors.grey),
+                          hintStyle: TextStyle(color: Colors.white ),
+                          prefixIcon: Icon(Icons.phone, color: Colors.white),
                           filled: true,
-                          fillColor: Colors.grey.withOpacity(0.1),
+                          fillColor: Colors.grey.withOpacity(0.15),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide.none,
@@ -388,7 +381,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           Text('Already have an account?',
                             style:TextStyle(
                               fontSize: 14,
-                              color: Colors.grey.shade700,
+                              color: Colors.white,
                               ) ,),
                           TextButton(
                             onPressed: () {
@@ -400,6 +393,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             child: Text('Sign In', style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w700,
+                              color: Colors.orange
 
 
                             )),
