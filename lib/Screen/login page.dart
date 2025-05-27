@@ -127,6 +127,7 @@ class _LoginPageState extends State<LoginPage> {
                       SizedBox(height: 8),
                       TextFormField(
                         controller: _emailController,
+                        style: TextStyle(color: Colors.white),
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                           hintText: 'Enter your email',
@@ -161,6 +162,7 @@ class _LoginPageState extends State<LoginPage> {
                       TextFormField(
                         controller: _passwordController,
                         obscureText: _obscureText,
+                        style: TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           hintText: 'Enter your password',
                           hintStyle: TextStyle(color: Colors.white ),

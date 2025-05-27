@@ -133,12 +133,11 @@ class _SignUpPageState extends State<SignUpPage> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      SizedBox(height: 20,),
                       Center(
                         child: Column(
                           children: [
                             Icon(Icons.account_circle, size: 100, color: Colors.orange),
-                            SizedBox(height: 8),
-
 
                             Text(
                               'Sign Up to continue',
@@ -162,6 +161,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       SizedBox(height: 8),
                       TextFormField(
                         controller: _username,
+                        style: TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           hintText: 'User Name...',
                           hintStyle: TextStyle(color: Colors.white),
@@ -193,6 +193,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       SizedBox(height: 8),
                       TextFormField(
                         controller: _email,
+                        style: TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           hintText: 'Example@gmail.com',
                           hintStyle: TextStyle(color: Colors.white ),
@@ -224,6 +225,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       SizedBox(height: 8),
                       TextFormField(
                         controller: _password,
+                        style: TextStyle(color: Colors.white),
                         obscureText: _obscureText,
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
@@ -270,6 +272,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       TextFormField(
                         controller: _confirmPassword,
                         obscureText: _obscureText1,
+                        style: TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           hintText: 'Confirm Password',
                           hintStyle: TextStyle(color: Colors.white ),
@@ -317,6 +320,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       SizedBox(height: 8),
                       TextFormField(
                         controller: _phone,
+                        style: TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           hintText: '03001234567',
                           hintStyle: TextStyle(color: Colors.white ),
