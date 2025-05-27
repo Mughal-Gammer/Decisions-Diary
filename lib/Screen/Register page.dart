@@ -71,6 +71,8 @@ class _SignUpPageState extends State<SignUpPage> {
         'UserName': _username.text.trim().toLowerCase(),
         'Email': _email.text.trim(),
         'Phone': _phone.text.trim(),
+        'Password': _password.text.trim(),
+        'ConfirmPassword' : _confirmPassword.text.trim(),
         'UserId': userId,
       });
 

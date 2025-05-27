@@ -370,6 +370,7 @@ class _AddDecisionScreenState extends State<AddDecisionScreen> {
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
+                      color: Colors.white
                     ),
                   ),
                 ),

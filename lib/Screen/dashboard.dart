@@ -142,11 +142,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                     ),
                     const SizedBox(height: 16),
-                    _buildDetailSection('Reason', decision.reason),
+                    _buildDetailSection('Reason', decision.reason ),
                     const SizedBox(height: 16),
                     _buildDetailSection(
                         'Expected Outcome',
                         decision.expectedOutcome ?? 'Not specified'
+
                     ),
                     const SizedBox(height: 16),
                     Column(
@@ -267,7 +268,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildDetailSection(String title, String content) {
+  Widget _buildDetailSection(String title, String content,) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -275,6 +276,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           title,
           style: TextStyle(
             fontWeight: FontWeight.bold,
+
 
           ),
         ),
@@ -286,7 +288,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             color: Colors.grey.shade100,
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Text(content),
+          child: Text(content,style: TextStyle(color: Colors.black),),
         ),
       ],
     );
@@ -578,6 +580,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.orange,
         onPressed: () => _navigateToAddDecision(context),
         child: const Icon(Icons.add),
       ),
