@@ -199,7 +199,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   const SizedBox(width: 16),
                                   Expanded(
                                     child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(shadowColor:  Colors.amber, ),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.blue.shade900,
+                                        shadowColor:  Colors.yellow,
+                                      ),
                                       onPressed: () async {
                                         setModalState(() => _isSaving = true);
                                         final user = _auth.currentUser;
@@ -230,7 +233,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                           color: Colors.white,
                                         ),
                                       )
-                                          : const Text('Save'),
+                                          : const Text('Save',style: TextStyle(color: Colors.white),),
                                     ),
                                   ),
                                 ],
