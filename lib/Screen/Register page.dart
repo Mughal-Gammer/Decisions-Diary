@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+import 'EmailVerification.dart';
 import 'login page.dart';
 
 
@@ -44,7 +45,9 @@ class _SignUpPageState extends State<SignUpPage> {
       bool usernameExists = false;
       if (snapshot.value != null) {
         final usersMap = snapshot.value as Map<dynamic, dynamic>;
-        usernameExists = usersMap.values.any((user) => user['UserName'] == _username.text.trim());
+        usernameExists = usersMap.values.any(
+              (user) => user['UserName'] == _username.text.trim(),
+        );
       }
 
       if (usernameExists) {
@@ -64,6 +67,9 @@ class _SignUpPageState extends State<SignUpPage> {
         password: _password.text.trim(),
       );
 
+      // Send email verification
+      await userCredential.user!.sendEmailVerification();
+
       // Save user data to Realtime Database
       final userId = userCredential.user!.uid;
 
@@ -72,17 +78,16 @@ class _SignUpPageState extends State<SignUpPage> {
         'Email': _email.text.trim(),
         'Phone': _phone.text.trim(),
         'Password': _password.text.trim(),
-        'ConfirmPassword' : _confirmPassword.text.trim(),
+        'ConfirmPassword': _confirmPassword.text.trim(),
         'UserId': userId,
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Registration successful')),
-      );
-
+      // Navigate to email verification screen
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => LoginPage()),
+        MaterialPageRoute(
+          builder: (_) => EmailVerificationScreen(userCredential: userCredential),
+        ),
       );
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -94,6 +99,7 @@ class _SignUpPageState extends State<SignUpPage> {
       });
     }
   }
+
 
 
   @override
