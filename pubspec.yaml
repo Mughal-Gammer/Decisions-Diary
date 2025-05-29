@@ -39,6 +39,13 @@ dependencies:
   firebase_database:
   intl:
   provider:
+  pdf:
+  printing: ^5.14.2
+  syncfusion_flutter_datepicker:
+  syncfusion_flutter_charts:
+  path_provider: ^2.1.1
+  open_file: ^3.3.1
+  share_plus:
 
 dev_dependencies:
   flutter_test:

@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../widgets/Model class new.dart';
 import '../widgets/ThemeNotifier.dart';
 import 'Add Decisions.dart';
+import 'ReportCard.dart';
 import 'login page.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -481,9 +482,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
         centerTitle: false,
         elevation: 0,
         actions: [
+          IconButton(
+            icon: const Icon(Icons.bar_chart),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ReportsScreen()),
+              );
+            },
+            tooltip: 'View Reports',
+          ),
           Consumer<ThemeNotifier>(
             builder: (context, themeNotifier, child) {
-              return IconButton(
+              return
+                IconButton(
                 icon: Icon(
                   themeNotifier.themeMode == ThemeMode.light
                       ? Icons.light_mode
