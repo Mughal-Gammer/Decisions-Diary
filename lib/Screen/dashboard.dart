@@ -587,6 +587,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               entry.key,
             );
           }).toList();
+          decisions.sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
           List<Decision> filteredDecisions = decisions.where((decision) {
             if (_selectedFilter == 'Completed') {
