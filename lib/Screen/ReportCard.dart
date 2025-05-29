@@ -269,14 +269,16 @@ class _ReportsScreenState extends State<ReportsScreen> {
           build: (pw.Context context) {
             return pw.Column(
               crossAxisAlignment: pw.CrossAxisAlignment.center,
-              mainAxisAlignment: pw.MainAxisAlignment.center,
               children: [
-                pw.Text(
-                  'Decision Report',
-                  style: pw.TextStyle(
-                    fontSize: 28,
-                    fontWeight: pw.FontWeight.bold,
-                    color: PdfColors.blue800,
+
+                pw.Center(
+                  child: pw.Text(
+                    'Decision Report',
+                    style: pw.TextStyle(
+                      fontSize: 28,
+                      fontWeight: pw.FontWeight.bold,
+                      color: PdfColors.blue800,
+                    ),
                   ),
                 ),
                 pw.SizedBox(height: 30),
@@ -297,8 +299,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     color: PdfColors.grey600,
                   ),
                 ),
+
               ],
             );
+
           },
         ),
       );
@@ -312,7 +316,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
             final completed = _decisions.where((d) => d.finalOutcome?.isNotEmpty == true).length;
             final pending = _decisions.length - completed;
 
-            return pw.Column(
+            return
+              pw.Column(
               crossAxisAlignment: pw.CrossAxisAlignment.start,
               children: [
                 pw.Text(
@@ -433,14 +438,15 @@ class _ReportsScreenState extends State<ReportsScreen> {
     return pw.Container(
       width: 150,
       height: 80,
-      margin:  pw.EdgeInsets.only(bottom: 10),
+      margin: const pw.EdgeInsets.only(bottom: 10),
       decoration: pw.BoxDecoration(
         color: color,
-        borderRadius:  pw.BorderRadius.all(pw.Radius.circular(5)),
+        borderRadius: const pw.BorderRadius.all(pw.Radius.circular(5)),
         boxShadow: [
           pw.BoxShadow(
             color: PdfColors.grey300,
             blurRadius: 2,
+
           ),
         ],
       ),
@@ -469,6 +475,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
       ),
     );
   }
+
 
 
 

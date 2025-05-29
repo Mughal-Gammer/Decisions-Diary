@@ -193,16 +193,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 children: [
                                   Expanded(
                                     child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(shadowColor:  Colors.amber, ),
+                                      style: ElevatedButton.styleFrom(
+                                        shadowColor:  Colors.red,
+                                        elevation: 5
+                                      ),
                                       onPressed: () => setModalState(() => _isEditing = false),
-            child: const Text('Cancel'),)
+                                      child: const Text('Cancel',style: TextStyle(color:Colors.red),),)
                                   ),
                                   const SizedBox(width: 16),
                                   Expanded(
                                     child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.blue.shade900,
-                                        shadowColor:  Colors.yellow,
+                                        shadowColor:  Colors.green,
+                                        elevation: 5
+
+
                                       ),
                                       onPressed: () async {
                                         setModalState(() => _isSaving = true);
@@ -231,10 +236,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         height: 20,
                                         child: CircularProgressIndicator(
                                           strokeWidth: 2,
-                                          color: Colors.white,
+                                          color: Colors.orange,
                                         ),
                                       )
-                                          : const Text('Save',style: TextStyle(color: Colors.white),),
+                                          : const Text('Save',style: TextStyle(color: Colors.green),),
                                     ),
                                   ),
                                 ],
@@ -262,7 +267,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(shadowColor:  Colors.white, ),
+                        style: ElevatedButton.styleFrom(
+                          shadowColor:  Colors.white,
+                          elevation: 5,
+                        ),
                         onPressed: () => Navigator.pop(context),
                         child: const Text('Close'),
                       ),
@@ -492,19 +500,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
             },
             tooltip: 'View Reports',
           ),
-          Consumer<ThemeNotifier>(
+          Consumer<ThemeProvider>(
             builder: (context, themeNotifier, child) {
-              return
-                IconButton(
-                icon: Icon(
-                  themeNotifier.themeMode == ThemeMode.light
-                      ? Icons.light_mode
-                      : Icons.dark_mode,
+              return AnimatedSwitcher(
+                duration: Duration(milliseconds: 300),
+                child: IconButton(
+                  key: ValueKey<bool>(themeNotifier.isDarkMode),
+                  icon: Icon(
+                    themeNotifier.isDarkMode ? Icons.light_mode : Icons.dark_mode,
+                  ),
+                  onPressed: () {
+                    themeNotifier.toggleTheme();
+                  },
+                  tooltip: themeNotifier.isDarkMode
+                      ? 'Switch to light mode'
+                      : 'Switch to dark mode',
                 ),
-                onPressed: () {
-                  themeNotifier.toggleTheme();
-                },
-                tooltip: 'Toggle Theme',
               );
             },
           ),
