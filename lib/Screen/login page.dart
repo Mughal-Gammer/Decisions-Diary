@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
+
 import 'package:flutter/material.dart';
+
 
 import 'Register page.dart';
 import 'dashboard.dart';
