@@ -368,9 +368,9 @@ class _AddDecisionScreenState extends State<AddDecisionScreen> {
                       : Text(
                     widget.decision == null ? 'Save Decision' : 'Update Decision',
                     style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white
                     ),
                   ),
                 ),

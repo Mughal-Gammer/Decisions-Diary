@@ -1,12 +1,20 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 import 'login page.dart';
 
 class EmailVerificationScreen extends StatefulWidget {
-  const EmailVerificationScreen({Key? key, required this.userCredential}) : super(key: key);
+  final Map<String, String> pendingUserData;
+
+  const EmailVerificationScreen({
+    Key? key,
+    required this.userCredential,
+    required this.pendingUserData,
+  }) : super(key: key);
+
   final UserCredential userCredential;
 
   @override
@@ -71,6 +79,13 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen>
       setState(() => isEmailVerified = true);
       _verificationTimer?.cancel();
 
+      // Save user data now
+      final userId = user.uid;
+      await FirebaseDatabase.instance.ref("users/$userId").set({
+        ...widget.pendingUserData,
+        'UserId': userId,
+      });
+
       if (mounted) {
         Navigator.pushReplacement(
           context,
@@ -78,6 +93,8 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen>
         );
       }
     }
+
+
   }
 
   Future<void> _resendVerificationEmail() async {
@@ -176,16 +193,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen>
                           ),
                         ),
                       ),
-                      const SizedBox(height: 20),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (_) => const LoginPage()),
-                          );
-                        },
-                        child: const Text("I'll verify later"),
-                      ),
+
                     ]
                   ],
                 ),

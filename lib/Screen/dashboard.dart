@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../widgets/Model class new.dart';
-import '../widgets/ThemeNotifier.dart';
+import '../widgets/ThemeProvider.dart';
 import 'Add Decisions.dart';
 import 'ReportCard.dart';
 import 'login page.dart';
@@ -40,8 +40,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     if (user != null) {
       _decisionsStream = _dbRef
           .child('users/${user.uid}/decisions')
-          .orderByChild('createdAt')
+          .orderByChild('date')
           .onValue;
+
     } else {
       _decisionsStream = const Stream<DatabaseEvent>.empty();
     }
@@ -597,6 +598,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
             }
             return true;
           }).toList();
+          filteredDecisions.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
 
           return RefreshIndicator(
             onRefresh: () async => setState(() {}),

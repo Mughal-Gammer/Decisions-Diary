@@ -87,8 +87,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
           children: [
             Expanded(
               child: OutlinedButton(
-                onPressed: () => _selectLast7Weeks(),
-                child: const Text('Last 7 Weeks'),
+                onPressed: () => _selectLast7Days(),
+                child: const Text('Last 7 Days'),
               ),
             ),
             const SizedBox(width: 10),
@@ -192,11 +192,11 @@ class _ReportsScreenState extends State<ReportsScreen> {
     }
   }
 
-  void _selectLast7Weeks() {
+  void _selectLast7Days() {
     final now = DateTime.now();
     setState(() {
       _selectedDateRange = DateTimeRange(
-        start: now.subtract(const Duration(days: 7 * 7)),
+        start: now.subtract(const Duration(days: (7-1) * 1 )),
         end: now,
       );
     });

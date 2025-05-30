@@ -29,17 +29,27 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     try {
+      //
       // Firebase login
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
-      );
 
-      // Navigate to DashboardPage after successful login
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => DashboardScreen()),
       );
+        if(
+        userCredential.user!.emailVerified
+        ){
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => DashboardScreen()),
+          );
+        }else{ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Email is not verified')));
+        setState(() {
+          _isLoading = false;
+        });
+        }
+      // Navigate to DashboardPage after successful login
+
     } on FirebaseAuthException catch (e) {
       // Show error if login fails
       ScaffoldMessenger.of(context).showSnackBar(

@@ -54,13 +54,11 @@ class _SignUpPageState extends State<SignUpPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Oops! That username is already registered.")),
         );
-        setState(() {
-          _isLoading = false;
-        });
+        setState(() => _isLoading = false);
         return;
       }
 
-      // Firebase Authentication
+      // Register user with FirebaseAuth
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
         email: _email.text.trim(),
@@ -70,23 +68,20 @@ class _SignUpPageState extends State<SignUpPage> {
       // Send email verification
       await userCredential.user!.sendEmailVerification();
 
-      // Save user data to Realtime Database
-      final userId = userCredential.user!.uid;
-
-      await FirebaseDatabase.instance.ref("users/$userId").set({
-        'UserName': _username.text.trim().toLowerCase(),
-        'Email': _email.text.trim(),
-        'Phone': _phone.text.trim(),
-        'Password': _password.text.trim(),
-        'ConfirmPassword': _confirmPassword.text.trim(),
-        'UserId': userId,
-      });
-
-      // Navigate to email verification screen
+      // Navigate to email verification screen and pass pending data
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) => EmailVerificationScreen(userCredential: userCredential),
+          builder: (_) => EmailVerificationScreen(
+            userCredential: userCredential,
+            pendingUserData: {
+              'UserName': _username.text.trim().toLowerCase(),
+              'Email': _email.text.trim(),
+              'Phone': _phone.text.trim(),
+              'Password': _password.text.trim(),
+              'ConfirmPassword': _confirmPassword.text.trim(),
+            },
+          ),
         ),
       );
     } on FirebaseAuthException catch (e) {
@@ -99,6 +94,7 @@ class _SignUpPageState extends State<SignUpPage> {
       });
     }
   }
+
 
 
 

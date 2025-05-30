@@ -1,4 +1,4 @@
-import 'package:desicionsdiarynew/widgets/ThemeNotifier.dart';
+import 'package:desicionsdiarynew/widgets/ThemeProvider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
