@@ -163,7 +163,7 @@ class _LoginPageState extends State<LoginPage> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 16),
+                      SizedBox(height: 8),
                       // Password
                       Text(
                         'Password',
@@ -208,7 +208,7 @@ class _LoginPageState extends State<LoginPage> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 16),
+                      SizedBox(height: 30),
 
                       SizedBox(
                         width: double.infinity,
@@ -241,7 +241,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 24),
+                      SizedBox(height: 8),
                       Center(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
