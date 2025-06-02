@@ -177,16 +177,21 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen>
                           height: 20,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            color: Colors.white,
+                            color: Colors.orange,
                           ),
                         )
-                            : const Icon(Icons.email_outlined),
+                            : const Icon(Icons.email_outlined,color: Colors.blueAccent,),
                         label: Text(
                           _countdown > 0
                               ? 'Resend in $_countdown seconds'
                               : 'Resend Verification Email',
+                          style: TextStyle(
+                            color: Colors.blueAccent
+                          ),
                         ),
-                        style: ElevatedButton.styleFrom(
+                        style:
+
+                        ElevatedButton.styleFrom(
                           minimumSize: const Size.fromHeight(50),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),

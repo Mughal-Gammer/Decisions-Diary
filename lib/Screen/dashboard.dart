@@ -492,16 +492,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child:
           Consumer<ThemeProvider>(
             builder: (context, themeNotifier, child) {
-              return CircleAvatar(
+              return Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: CircleAvatar(
 
-                backgroundColor: Colors.transparent,
-                child: ClipOval(
-                  child: Image.asset(
-                    themeNotifier.isDarkMode
-                        ? 'assets/images/logo1.png'
-                        : 'assets/images/logo.png',
-                    fit: BoxFit.cover,
+                  backgroundColor: Colors.transparent,
+                  child: ClipOval(
+                    child: Image.asset(
+                      themeNotifier.isDarkMode
+                          ? 'assets/images/logo1.png'
+                          : 'assets/images/logo.png',
+                      fit: BoxFit.cover,
 
+                    ),
                   ),
                 ),
               );
