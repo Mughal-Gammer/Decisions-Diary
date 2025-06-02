@@ -328,7 +328,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         controller: _phone,
                         style: TextStyle(color: Colors.white),
                         decoration: InputDecoration(
-                          hintText: '03001234567',
+                          hintText: '0300XXXXXXX',
                           hintStyle: TextStyle(color: Colors.white ),
                           prefixIcon: Icon(Icons.phone, color: Colors.white),
                           filled: true,
