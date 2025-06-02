@@ -135,12 +135,16 @@ class _SignUpPageState extends State<SignUpPage> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: 20,),
+                      SizedBox(height: 30,),
                       Center(
                         child: Column(
                           children: [
-                            Icon(Icons.account_circle, size: 100, color: Colors.orange),
-
+                            CircleAvatar(
+                              radius: 55,
+                              backgroundColor: Colors.transparent,
+                              backgroundImage: AssetImage('assets/images/logo1.png'),
+                            ),
+                            SizedBox(height: 5,),
                             Text(
                               'Sign Up to continue',
                               style: TextStyle(
@@ -260,7 +264,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 16),
+                      SizedBox(height: 8),
                       // Password
                       Text(
                         'PassW@rd123',
@@ -345,7 +349,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 16),
+                      SizedBox(height: 8),
 
 
 
@@ -380,7 +384,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 24),
+                      SizedBox(height: 12),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

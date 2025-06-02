@@ -104,7 +104,11 @@ class _LoginPageState extends State<LoginPage> {
                       Center(
                         child: Column(
                           children: [
-                            Icon(Icons.account_circle, size: 100, color: Colors.orange),
+                            CircleAvatar(
+                              radius: 55,
+                              backgroundColor: Colors.transparent,
+                              backgroundImage: AssetImage('assets/images/logo1.png'),
+                            ),
                             SizedBox(height: 16),
                             Text(
                               'Welcome Back',
