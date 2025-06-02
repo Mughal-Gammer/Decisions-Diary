@@ -236,13 +236,7 @@ class _AddDecisionScreenState extends State<AddDecisionScreen> {
                         },
                       ),
                       const SizedBox(height: 24),
-                      Text(
-                        'Decision Date',
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          color: Colors.grey.shade700,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
+
                       InkWell(
                         onTap: () => _selectDate(context),
                         borderRadius: BorderRadius.circular(12),
