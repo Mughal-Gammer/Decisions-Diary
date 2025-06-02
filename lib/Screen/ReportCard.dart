@@ -206,7 +206,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
     final now = DateTime.now();
     setState(() {
       _selectedDateRange = DateTimeRange(
-        start: DateTime(now.year, now.month - 1, now.day),
+        start: now.subtract(const Duration(days: (30-1) * 1 )),
         end: now,
       );
     });
