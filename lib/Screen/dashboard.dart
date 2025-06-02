@@ -487,86 +487,108 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: CircleAvatar(
+            backgroundImage: AssetImage('assets/images/logo.png'),
+            backgroundColor: Colors.transparent,
+          ),
+        ),
         title: const Text('My Decisions'),
         centerTitle: false,
         elevation: 0,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.bar_chart),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ReportsScreen()),
-              );
-            },
-            tooltip: 'View Reports',
-          ),
-          Consumer<ThemeProvider>(
-            builder: (context, themeNotifier, child) {
-              return AnimatedSwitcher(
-                duration: Duration(milliseconds: 300),
-                child: IconButton(
-                  key: ValueKey<bool>(themeNotifier.isDarkMode),
-                  icon: Icon(
-                    themeNotifier.isDarkMode ? Icons.light_mode : Icons.dark_mode,
-                  ),
-                  onPressed: () {
-                    themeNotifier.toggleTheme();
-                  },
-                  tooltip: themeNotifier.isDarkMode
-                      ? 'Switch to light mode'
-                      : 'Switch to dark mode',
-                ),
-              );
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.filter_list),
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                builder: (context) {
-                  return StatefulBuilder(
-                    builder: (context, setModalState) {
-                      return Container(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Text(
-                              'Filter Decisions',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
+          PopupMenuButton<String>(
+            onSelected: (value) {
+              if (value == 'reports') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ReportsScreen()),
+                );
+              } else if (value == 'theme') {
+                Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
+              } else if (value == 'filter') {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (context) {
+                    return StatefulBuilder(
+                      builder: (context, setModalState) {
+                        return Container(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Text(
+                                'Filter Decisions',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 16),
-                            ...['All', 'Completed', 'Expected'].map((filter) {
-                              return RadioListTile<String>(
-                                title: Text(filter),
-                                value: filter,
-                                groupValue: _selectedFilter,
-                                onChanged: (value) {
-                                  setModalState(() => _selectedFilter = value!);
-                                  setState(() => _selectedFilter = value!);
-                                  Navigator.pop(context);
-                                },
-                              );
-                            }).toList(),
-                          ],
-                        ),
-                      );
-                    },
-                  );
-                },
-              );
+                              const SizedBox(height: 16),
+                              ...['All', 'Completed', 'Expected'].map((filter) {
+                                return RadioListTile<String>(
+                                  title: Text(filter),
+                                  value: filter,
+                                  groupValue: _selectedFilter,
+                                  onChanged: (value) {
+                                    setModalState(() => _selectedFilter = value!);
+                                    setState(() => _selectedFilter = value!);
+                                    Navigator.pop(context);
+                                  },
+                                );
+                              }).toList(),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
+                );
+              }
             },
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 'reports',
+                child: ListTile(
+                  leading: Icon(Icons.bar_chart),
+                  title: Text('View Reports'),
+                ),
+              ),
+              PopupMenuItem(
+                value: 'theme',
+                child: Consumer<ThemeProvider>(
+                  builder: (context, themeNotifier, child) {
+                    return ListTile(
+                      leading: Icon(
+                        themeNotifier.isDarkMode
+                            ? Icons.light_mode
+                            : Icons.dark_mode,
+                      ),
+                      title: Text(
+                        themeNotifier.isDarkMode
+                            ? 'Light Mode'
+                            : 'Dark Mode',
+                      ),
+                    );
+                  },
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'filter',
+                child: ListTile(
+                  leading: Icon(Icons.filter_list),
+                  title: Text('Filter Decisions'),
+                ),
+              ),
+            ],
           ),
           IconButton(
             onPressed: () => _alertDailogBox(context),
             icon: const Icon(Icons.logout_sharp),
           ),
         ],
+
       ),
       body: StreamBuilder<DatabaseEvent>(
         stream: _decisionsStream,
@@ -582,13 +604,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
           }
 
           final decisionsMap = snapshot.data!.snapshot.value as Map<dynamic, dynamic>;
+          // Inside your StreamBuilder builder function:
           final decisions = decisionsMap.entries.map((entry) {
             return Decision.fromMap(
               Map<String, dynamic>.from(entry.value),
               entry.key,
             );
           }).toList();
-          decisions.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
+          decisions.sort((a, b) => b.date.compareTo(a.date));
+
 
           List<Decision> filteredDecisions = decisions.where((decision) {
             if (_selectedFilter == 'Completed') {
@@ -598,7 +623,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
             }
             return true;
           }).toList();
-          filteredDecisions.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
+
+
 
 
           return RefreshIndicator(

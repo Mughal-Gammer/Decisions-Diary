@@ -31,11 +31,11 @@ class _AddDecisionScreenState extends State<AddDecisionScreen> {
     _reasonController = TextEditingController(text: widget.decision?.reason ?? '');
     _expectedController = TextEditingController(text: widget.decision?.expectedOutcome ?? '');
     _finalController = TextEditingController(text: widget.decision?.finalOutcome ?? '');
-    _selectedDate = widget.decision?.date ?? DateTime.now();
+    _selectedDate = widget.decision?.date ?? DateTime.now(); // This will include current time
   }
 
   Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
+    final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: _selectedDate,
       firstDate: DateTime(2000),
@@ -59,8 +59,43 @@ class _AddDecisionScreenState extends State<AddDecisionScreen> {
         );
       },
     );
-    if (picked != null && picked != _selectedDate) {
-      setState(() => _selectedDate = picked);
+
+    if (pickedDate != null) {
+      final TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.fromDateTime(_selectedDate),
+        builder: (context, child) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: ColorScheme.light(
+                primary: Theme.of(context).primaryColor,
+                onPrimary: Colors.white,
+                surface: Colors.white,
+                onSurface: Colors.black,
+              ),
+              textButtonTheme: TextButtonThemeData(
+                style: TextButton.styleFrom(
+                  foregroundColor: Theme.of(context).primaryColor,
+                ),
+              ),
+            ),
+            child: child!,
+          );
+        },
+      );
+
+      if (pickedTime != null) {
+        final newDateTime = DateTime(
+          pickedDate.year,
+          pickedDate.month,
+          pickedDate.day,
+          pickedTime.hour,
+          pickedTime.minute,
+        );
+        if (newDateTime != _selectedDate) {
+          setState(() => _selectedDate = newDateTime);
+        }
+      }
     }
   }
 
@@ -225,12 +260,11 @@ class _AddDecisionScreenState extends State<AddDecisionScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                DateFormat('MMMM d, yyyy').format(_selectedDate),
+                                DateFormat('MMMM d, yyyy - hh:mm a').format(_selectedDate),
                                 style: Theme.of(context).textTheme.bodyMedium,
                               ),
                               Icon(
                                 Icons.calendar_today,
-
                                 size: 20,
                               ),
                             ],
