@@ -489,10 +489,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
         automaticallyImplyLeading: false,
         leading: Padding(
           padding: const EdgeInsets.only(left: 8.0),
-          child: CircleAvatar(
+          child:
+          CircleAvatar(
             backgroundImage: AssetImage('assets/images/logo.png'),
             backgroundColor: Colors.transparent,
           ),
+
         ),
         title: const Text('My Decisions'),
         centerTitle: false,
@@ -559,6 +561,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 value: 'theme',
                 child: Consumer<ThemeProvider>(
                   builder: (context, themeNotifier, child) {
+                    // Safe context check
+                    if (!context.mounted) {
+                      return const SizedBox.shrink();
+                    }
+
                     return ListTile(
                       leading: Icon(
                         themeNotifier.isDarkMode
