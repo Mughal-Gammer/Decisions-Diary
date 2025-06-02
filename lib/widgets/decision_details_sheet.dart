@@ -59,7 +59,8 @@ class DecisionDetailsSheet extends StatelessWidget {
           const SizedBox(height: 32),
           SizedBox(
             width: double.infinity,
-            child: ElevatedButton(
+            child:
+            ElevatedButton(
               onPressed: () => Navigator.pop(context),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
