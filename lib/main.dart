@@ -12,7 +12,7 @@
 // Future<void> main() async {
 //   WidgetsFlutterBinding.ensureInitialized();
 //   await Firebase.initializeApp(
-//     options: DefaultFirebaseOptions.currentPlatform, // Initialize with the generated options
+//     options: DefaultFirebaseOptions.currentPlatform,
 //   );
 //
 //   runApp(

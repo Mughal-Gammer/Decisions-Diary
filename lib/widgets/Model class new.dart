@@ -73,7 +73,7 @@ class Decision {
       'reason': reason,
       'expectedOutcome': expectedOutcome,
       'finalOutcome': finalOutcome,
-      'date': date.toIso8601String(), // Save as ISO8601 string (includes time)
+      'date': date.toIso8601String(),
       'createdAt': createdAt.millisecondsSinceEpoch,
     };
   }
@@ -86,8 +86,7 @@ class Decision {
       expectedOutcome: map['expectedOutcome'],
       finalOutcome: map['finalOutcome'],
       date: map['date'] != null
-          ? DateTime.parse(map['date']) // Parse ISO8601 string
-          : DateTime.now(),
+          ? DateTime.parse(map['date']) : DateTime.now(),
       createdAt: map['createdAt'] != null
           ? DateTime.fromMillisecondsSinceEpoch(map['createdAt'])
           : DateTime.now(),
