@@ -327,6 +327,8 @@ class _SignUpPageState extends State<SignUpPage> {
                       TextFormField(
                         controller: _phone,
                         style: TextStyle(color: Colors.white),
+                        maxLength: 11,
+                        keyboardType: TextInputType.phone,
                         decoration: InputDecoration(
                           hintText: '0300XXXXXXX',
                           hintStyle: TextStyle(color: Colors.white ),
@@ -336,13 +338,12 @@ class _SignUpPageState extends State<SignUpPage> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide.none,
-                          ),
 
+                          ),
                           contentPadding: EdgeInsets.symmetric(
                               vertical: 16, horizontal: 16),
                         ),
-                        keyboardType: TextInputType.phone,
-                        maxLength: 11,
+
                         validator: (value) {
                           if (value == null || value.isEmpty) return 'Please enter your Phone';
                           if (value.length != 11) return 'Password must be at least 11 characters';
