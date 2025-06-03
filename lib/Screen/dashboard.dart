@@ -47,6 +47,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       _decisionsStream = const Stream<DatabaseEvent>.empty();
     }
   }
+
   void _navigateToAddDecision(BuildContext context, [Decision? decision]) {
     Navigator.push(
       context,
@@ -207,8 +208,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       style: ElevatedButton.styleFrom(
                                         shadowColor:  Colors.green,
                                         elevation: 5
-
-
                                       ),
                                       onPressed: () async {
                                         setModalState(() => _isSaving = true);

@@ -85,7 +85,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen>
         ...widget.pendingUserData,
         'UserId': userId,
       });
-
+      await Future.delayed(const Duration(seconds: 3));
       if (mounted) {
         Navigator.pushReplacement(
           context,

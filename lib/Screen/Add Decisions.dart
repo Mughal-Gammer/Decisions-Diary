@@ -31,7 +31,7 @@ class _AddDecisionScreenState extends State<AddDecisionScreen> {
     _reasonController = TextEditingController(text: widget.decision?.reason ?? '');
     _expectedController = TextEditingController(text: widget.decision?.expectedOutcome ?? '');
     _finalController = TextEditingController(text: widget.decision?.finalOutcome ?? '');
-    _selectedDate = widget.decision?.date ?? DateTime.now(); // This will include current time
+    _selectedDate = widget.decision?.date ?? DateTime.now();
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -162,7 +162,8 @@ class _AddDecisionScreenState extends State<AddDecisionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar:
+      AppBar(
         title: Text(widget.decision == null ? 'Add New Decision' : 'Edit Decision'),
         centerTitle: true,
         elevation: 0,
