@@ -201,7 +201,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         controller: _email,
                         style: TextStyle(color: Colors.white),
                         decoration: InputDecoration(
-                          hintText: 'Example@gmail.com',
+                          hintText: 'example@gmail.com',
                           hintStyle: TextStyle(color: Colors.white ),
                           prefixIcon: Icon(Icons.email, color: Colors.white),
                           filled: true,
