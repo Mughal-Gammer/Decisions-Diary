@@ -84,12 +84,9 @@ class _LoginPageState extends State<LoginPage> {
             Container(
               decoration: BoxDecoration(
                 color: Color(0xFF3A4359),
-
               ),
-
             ),
           ),
-
 
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30),
