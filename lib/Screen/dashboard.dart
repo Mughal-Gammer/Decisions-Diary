@@ -458,7 +458,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text("LogOut"),
+          title: const Text("LogOut",style: TextStyle(fontWeight: FontWeight.bold),),
           content: const Text("Are you want to sure Logout?"),
           actions: [
             TextButton(
