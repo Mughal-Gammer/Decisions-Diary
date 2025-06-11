@@ -170,7 +170,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     const Icon(Icons.calendar_month, size: 18),
                     const SizedBox(width: 3),
                     Text(
-                      _showCalendar ? 'Select Date' : 'Hide Calendar',
+                      _showCalendar ?  'Hide Calendar':'Select Date' ,
                       style: const TextStyle(fontSize: 12),
                     ),
                   ],
