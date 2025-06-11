@@ -7,7 +7,7 @@ class ThemeProvider with ChangeNotifier {
 
   bool get isDarkMode => _isDarkMode;
 
-  ThemeProvider() {
+  ThemeProvider( ) {
     loadThemePreference();
   }
 
@@ -40,3 +40,4 @@ class ThemeProvider with ChangeNotifier {
     super.dispose();
   }
 }
+

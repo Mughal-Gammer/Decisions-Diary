@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
@@ -25,12 +27,34 @@ class _ReportsScreenState extends State<ReportsScreen> {
   bool _isLoading = false;
   bool _isSaving = false;
   bool _isSharing = false;
+  Uint8List? _logoBytes; // Stores the logo image bytes
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLogo(); // Load the logo when the widget initializes
+  }
+
+  Future<void> _loadLogo() async {
+    try {
+      final ByteData data = await rootBundle.load('assets/images/logo.png');
+      setState(() {
+        _logoBytes = data.buffer.asUint8List();
+      });
+    } catch (e) {
+      print("Error loading logo: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Decision Reports'),
+        automaticallyImplyLeading: false,
+        leading: IconButton(onPressed: (Navigator.of(context).pop), icon: Icon(Icons.arrow_back,color: Colors.white,)),
+        title: const Text('Decision Reports',style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
+        centerTitle: true,
+        backgroundColor: Colors.blueAccent,
         actions: [
           IconButton(
             icon: _isSaving
@@ -42,7 +66,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 color: Colors.white,
               ),
             )
-                : const Icon(Icons.save),
+                : const Icon(Icons.save, color: Colors.white),
             onPressed: _isLoading || _isSaving || _isSharing ? null : _savePdfReport,
             tooltip: 'Save PDF',
           ),
@@ -56,13 +80,15 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 color: Colors.white,
               ),
             )
-                : const Icon(Icons.share),
+                : const Icon(Icons.share, color: Colors.white),
             onPressed: _isLoading || _isSaving || _isSharing ? null : _sharePdfReport,
             tooltip: 'Share PDF',
           ),
         ],
       ),
-      body: SingleChildScrollView(
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,22 +110,32 @@ class _ReportsScreenState extends State<ReportsScreen> {
       children: [
         const Text(
           'Quick Select:',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blueAccent),
         ),
         const SizedBox(height: 8),
         Row(
           children: [
             Expanded(
-              child: OutlinedButton(
+              child: ElevatedButton.icon(
+                icon: const Icon(Icons.calendar_today, size: 18),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue[50],
+                  foregroundColor: Colors.blueAccent,
+                ),
                 onPressed: _selectLast7Days,
-                child: const Text('Last 7 Days'),
+                label: const Text('Last 7 Days'),
               ),
             ),
             const SizedBox(width: 10),
             Expanded(
-              child: OutlinedButton(
+              child: ElevatedButton.icon(
+                icon: const Icon(Icons.calendar_view_month, size: 18),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue[50],
+                  foregroundColor: Colors.blueAccent,
+                ),
                 onPressed: _selectLastMonth,
-                child: const Text('Last Month'),
+                label: const Text('Last Month'),
               ),
             ),
           ],
@@ -110,17 +146,21 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
   Widget _buildDateRangePicker() {
     return Card(
-      elevation: 2,
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: Colors.blue.shade100, width: 1),
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
               'Custom Date Range:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blueAccent),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             SfDateRangePicker(
               selectionMode: DateRangePickerSelectionMode.range,
               onSelectionChanged: _onSelectionChanged,
@@ -131,6 +171,17 @@ class _ReportsScreenState extends State<ReportsScreen> {
               )
                   : null,
               maxDate: DateTime.now(),
+              selectionColor: Colors.blueAccent,
+              rangeSelectionColor: Colors.blueAccent.withOpacity(0.2),
+              startRangeSelectionColor: Colors.blueAccent,
+              endRangeSelectionColor: Colors.blueAccent,
+              todayHighlightColor: Colors.blueAccent,
+              monthCellStyle: const DateRangePickerMonthCellStyle(
+                todayTextStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+              yearCellStyle: const DateRangePickerYearCellStyle(
+                todayTextStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
             ),
           ],
         ),
@@ -142,37 +193,72 @@ class _ReportsScreenState extends State<ReportsScreen> {
     final startDate = _selectedDateRange!.start;
     final endDate = _selectedDateRange!.end;
     final days = endDate.difference(startDate).inDays + 1;
+    final completed = _decisions.where((d) => d['finalOutcome']?.isNotEmpty == true).length;
+    final pending = _decisions.length - completed;
 
     return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: Colors.blue.shade100, width: 1),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Report Summary',
-              style: Theme.of(context).textTheme.titleLarge,
+            Row(
+              children: [
+                const Icon(Icons.summarize, color: Colors.blueAccent),
+                const SizedBox(width: 8),
+                Text(
+                  'Report Summary',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    color: Colors.blueAccent,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 10),
-            Text(
-              'From: ${DateFormat('MMM d, yyyy').format(startDate)}',
-              style: const TextStyle(fontSize: 16),
-            ),
-            Text(
-              'To: ${DateFormat('MMM d, yyyy').format(endDate)}',
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              'Period: $days days',
-              style: const TextStyle(fontSize: 16),
-            ),
-            Text(
-              'Decisions: ${_decisions.length}',
-              style: const TextStyle(fontSize: 16),
-            ),
+            const SizedBox(height: 16),
+            _buildSummaryRow('From:', DateFormat('MMM d, yyyy').format(startDate)),
+            _buildSummaryRow('To:', DateFormat('MMM d, yyyy').format(endDate)),
+            const Divider(height: 30, thickness: 1),
+            _buildSummaryRow('Period:', '$days days'),
+            _buildSummaryRow('Total Decisions:', _decisions.length.toString()),
+            _buildSummaryRow('Completed:', '$completed', Colors.green),
+            _buildSummaryRow('Pending:', '$pending', Colors.orange),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildSummaryRow(String label, String value, [Color? valueColor]) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Text(
+              label,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: Text(
+              value,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: valueColor,
+              ),
+              textAlign: TextAlign.right,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -186,8 +272,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
             start: range.startDate!,
             end: range.endDate!,
           );
+          _fetchDecisionsForRange();
         });
-        _fetchDecisionsForRange();
       }
     }
   }
@@ -199,8 +285,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
         start: now.subtract(const Duration(days: 6)),
         end: now,
       );
+      _fetchDecisionsForRange();
     });
-    _fetchDecisionsForRange();
   }
 
   void _selectLastMonth() {
@@ -210,8 +296,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
         start: now.subtract(const Duration(days: 29)),
         end: now,
       );
+      _fetchDecisionsForRange();
     });
-    _fetchDecisionsForRange();
   }
 
   Future<void> _fetchDecisionsForRange() async {
@@ -240,6 +326,11 @@ class _ReportsScreenState extends State<ReportsScreen> {
           }).toList();
           _isLoading = false;
         });
+      } else {
+        setState(() {
+          _decisions = [];
+          _isLoading = false;
+        });
       }
     } catch (e) {
       setState(() => _isLoading = false);
@@ -250,34 +341,72 @@ class _ReportsScreenState extends State<ReportsScreen> {
   }
 
   Future<pw.Document> _generatePdfDocument() async {
-    if (_selectedDateRange == null || _decisions.isEmpty) {
-      throw Exception('No decisions found in the selected date range.');
+    if (_selectedDateRange == null) {
+      throw Exception('Please select a date range first.');
     }
 
     final pdf = pw.Document();
     final completed = _decisions.where((d) => d['finalOutcome']?.isNotEmpty == true).length;
     final pending = _decisions.length - completed;
 
+    // Create a PDF logo widget if we have the logo bytes
+    pw.Widget? logoWidget;
+    if (_logoBytes != null) {
+      logoWidget = pw.Container(
+        height: 60,
+        child: pw.Image(pw.MemoryImage(_logoBytes!)),
+      );
+    }
+
     pdf.addPage(
       pw.MultiPage(
         pageFormat: PdfPageFormat.a4,
         margin: const pw.EdgeInsets.all(24),
+        header: (pw.Context context) {
+          return pw.Container(
+            margin: const pw.EdgeInsets.only(bottom: 16),
+            child: pw.Column(
+              children: [
+                if (logoWidget != null) logoWidget,
+                pw.SizedBox(height: 10),
+                pw.Text(
+                  'Decision Report',
+                  style: pw.TextStyle(
+                    fontSize: 18,
+                    fontWeight: pw.FontWeight.bold,
+                    color: PdfColors.blue800,
+                  ),
+                ),
+                pw.Divider(thickness: 1, height: 16),
+              ],
+            ),
+          );
+        },
+        footer: (pw.Context context) {
+          return pw.Container(
+            margin: const pw.EdgeInsets.only(top: 16),
+            child: pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              children: [
+                pw.Text(
+                  'Generated on: ${DateFormat('MMMM d, yyyy').format(DateTime.now())}',
+                  style: const pw.TextStyle(fontSize: 10),
+                ),
+                pw.Text(
+                  'Page ${context.pageNumber} of ${context.pagesCount}',
+                  style: const pw.TextStyle(fontSize: 10),
+                ),
+              ],
+            ),
+          );
+        },
         build: (pw.Context context) => [
           pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               pw.Text(
-                'Decision Report',
-                style: pw.TextStyle(
-                  fontSize: 22,
-                  fontWeight: pw.FontWeight.bold,
-                  color: PdfColors.blue800,
-                ),
-              ),
-              pw.SizedBox(height: 10),
-              pw.Text(
-                'Period: ${DateFormat('MMMM d, yyyy').format(_selectedDateRange!.start)} to ${DateFormat('MMMM d, yyyy').format(_selectedDateRange!.end)}',
-                style: const pw.TextStyle(fontSize: 14),
+                'Report Period: ${DateFormat('MMMM d, yyyy').format(_selectedDateRange!.start)} to ${DateFormat('MMMM d, yyyy').format(_selectedDateRange!.end)}',
+                style: const pw.TextStyle(fontSize: 12, color: PdfColors.grey600),
               ),
               pw.SizedBox(height: 20),
               pw.Row(
@@ -288,44 +417,53 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   _buildStatCard('Pending', pending.toString(), PdfColors.orange100),
                 ],
               ),
-              pw.SizedBox(height: 20),
-              pw.Text(
-                'Generated on: ${DateFormat('MMMM d, yyyy').format(DateTime.now())}',
-                style: pw.TextStyle(
-                  fontSize: 12,
-                  color: PdfColors.grey600,
-                ),
-              ),
-              pw.Divider(thickness: 1, height: 30),
+              pw.SizedBox(height: 30),
               pw.Text(
                 'Decision Details',
                 style: pw.TextStyle(
-                  fontSize: 18,
+                  fontSize: 16,
                   fontWeight: pw.FontWeight.bold,
+                  color: PdfColors.blue800,
                 ),
               ),
               pw.SizedBox(height: 10),
-              pw.TableHelper.fromTextArray(
-                context: context,
-                cellAlignment: pw.Alignment.centerLeft,
-                headerStyle: pw.TextStyle(
-                  fontWeight: pw.FontWeight.bold,
-                  color: PdfColors.white,
+              if (_decisions.isEmpty)
+                pw.Padding(
+                  padding: const pw.EdgeInsets.all(20),
+                  child: pw.Center(
+                    child: pw.Text(
+                      'No decisions found in the selected date range',
+                      style: pw.TextStyle(fontSize: 14, color: PdfColors.grey600),
+                    ),
+                  ),
+                )
+              else
+                pw.TableHelper.fromTextArray(
+                  context: context,
+                  cellAlignment: pw.Alignment.centerLeft,
+                  headerStyle: pw.TextStyle(
+                    fontWeight: pw.FontWeight.bold,
+                    color: PdfColors.white,
+                  ),
+                  headerDecoration: pw.BoxDecoration(
+                    color: PdfColors.blue800,
+                    borderRadius: const pw.BorderRadius.all(pw.Radius.circular(4)),
+                  ),
+                  headers: ['Date', 'Title', 'Status', 'Outcome'],
+                  data: _decisions.map((decision) {
+                    return [
+                      DateFormat('MMM d, yyyy').format(DateTime.parse(decision['date'])),
+                      decision['title'] ?? 'Untitled',
+                      decision['finalOutcome']?.isNotEmpty == true
+                          ? pw.Text('Completed', style: pw.TextStyle(color: PdfColors.green))
+                          : pw.Text('Pending', style: pw.TextStyle(color: PdfColors.orange)),
+                      decision['finalOutcome'] ?? decision['expectedOutcome'] ?? 'N/A',
+                    ];
+                  }).toList(),
+                  cellPadding: const pw.EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+                  border: pw.TableBorder.all(color: PdfColors.grey300, width: 0.5),
+                  cellStyle: const pw.TextStyle(fontSize: 10),
                 ),
-                headerDecoration: pw.BoxDecoration(
-                  color: PdfColors.blue800,
-                  borderRadius: const pw.BorderRadius.all(pw.Radius.circular(2)),
-                ),
-                headers: ['Date', 'Title', 'Status', 'Outcome'],
-                data: _decisions.map((decision) {
-                  return [
-                    DateFormat('MMM d, yyyy').format(DateTime.parse(decision['date'])),
-                    decision['title'],
-                    decision['finalOutcome']?.isNotEmpty == true ? 'Completed' : 'Pending',
-                    decision['finalOutcome'] ?? decision['expectedOutcome'] ?? 'N/A',
-                  ];
-                }).toList(),
-              ),
             ],
           ),
         ],
@@ -337,16 +475,16 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
   pw.Container _buildStatCard(String title, String value, PdfColor color) {
     return pw.Container(
-      width: 120,
+      width: 100,
       height: 70,
       margin: const pw.EdgeInsets.only(bottom: 10),
       decoration: pw.BoxDecoration(
         color: color,
-        borderRadius: const pw.BorderRadius.all(pw.Radius.circular(5)),
+        borderRadius: const pw.BorderRadius.all(pw.Radius.circular(8)),
         boxShadow: [
           pw.BoxShadow(
             color: PdfColors.grey300,
-            blurRadius: 2,
+            blurRadius: 3,
           ),
         ],
       ),
@@ -357,7 +495,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
             pw.Text(
               title,
               style: pw.TextStyle(
-                fontSize: 12,
+                fontSize: 10,
                 fontWeight: pw.FontWeight.bold,
               ),
             ),
@@ -365,7 +503,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
             pw.Text(
               value,
               style: pw.TextStyle(
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: pw.FontWeight.bold,
                 color: PdfColors.blue800,
               ),
@@ -382,17 +520,24 @@ class _ReportsScreenState extends State<ReportsScreen> {
     try {
       final pdf = await _generatePdfDocument();
       final output = await getTemporaryDirectory();
-      final file = File('${output.path}/decision_report_${DateTime.now().millisecondsSinceEpoch}.pdf');
+      final fileName = 'decision_report_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}.pdf';
+      final file = File('${output.path}/$fileName');
       await file.writeAsBytes(await pdf.save());
 
       await OpenFile.open(file.path);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('PDF saved successfully')),
+        SnackBar(
+          content: Text('PDF saved successfully: $fileName'),
+          backgroundColor: Colors.green,
+        ),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to save PDF: ${e.toString()}')),
+        SnackBar(
+          content: Text('Failed to save PDF: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
       );
     } finally {
       setState(() => _isSaving = false);
@@ -405,7 +550,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
     try {
       final pdf = await _generatePdfDocument();
       final output = await getTemporaryDirectory();
-      final file = File('${output.path}/decision_report_${DateTime.now().millisecondsSinceEpoch}.pdf');
+      final fileName = 'decision_report_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}.pdf';
+      final file = File('${output.path}/$fileName');
       await file.writeAsBytes(await pdf.save());
 
       await Share.shareXFiles(
@@ -415,7 +561,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to share PDF: ${e.toString()}')),
+        SnackBar(
+          content: Text('Failed to share PDF: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
       );
     } finally {
       setState(() => _isSharing = false);
