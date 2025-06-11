@@ -309,7 +309,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: _decisions.length,
-                separatorBuilder: (context, index) => const Divider(height: 16),
+                separatorBuilder: (context, index) => const Divider(thickness: 2,color: Colors.blue, height: 16),
                 itemBuilder: (context, index) {
                   final decision = _decisions[index];
                   final date = DateTime.parse(decision['date']);
@@ -366,6 +366,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
+                            color: Colors.black,
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -383,7 +384,11 @@ class _ReportsScreenState extends State<ReportsScreen> {
                             Expanded(
                               child: Text(
                                 reason,
-                                style: const TextStyle(fontSize: 14),
+                                style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black,
+
+                                ),
                               ),
                             ),
                           ],
@@ -402,7 +407,11 @@ class _ReportsScreenState extends State<ReportsScreen> {
                             Expanded(
                               child: Text(
                                 expectedOutcome,
-                                style: const TextStyle(fontSize: 14),
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black,
+
+                                ),
                               ),
                             ),
                           ],
@@ -421,7 +430,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
                             Expanded(
                               child: Text(
                                 outcome,
-                                style: const TextStyle(fontSize: 14),
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black,
+                                ),
                               ),
                             ),
                           ],
