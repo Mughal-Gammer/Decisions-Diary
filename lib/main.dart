@@ -1,9 +1,10 @@
-
 import 'package:desicionsdiarynew/widgets/ThemeProvider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'Screen/dashboard.dart';
 import 'Screen/login page.dart';
 import 'firebase_options.dart';
 
@@ -41,8 +42,34 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-class AuthWrapper extends StatelessWidget {
+
+class AuthWrapper extends StatefulWidget {
   const AuthWrapper({super.key});
+
+  @override
+  State<AuthWrapper> createState() => _AuthWrapperState();
+}
+
+class _AuthWrapperState extends State<AuthWrapper> {
+  String? _lastRoute;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLastRoute();
+  }
+
+  Future<void> _loadLastRoute() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _lastRoute = prefs.getString('lastRoute');
+    });
+  }
+
+  Future<void> _saveLastRoute(String route) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('lastRoute', route);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,10 +83,7 @@ class AuthWrapper extends StatelessWidget {
         final user = snapshot.data;
 
         if (user != null) {
-          // Check if email is verified
           if (!user.emailVerified) {
-            // If email is not verified, stay on verification screen
-            // You might want to create a separate EmailVerificationScreen
             return Scaffold(
               body: Center(
                 child: Column(
@@ -87,10 +111,25 @@ class AuthWrapper extends StatelessWidget {
             );
           }
 
+          // If user is logged in and verified, check last route
+          if (_lastRoute == '/dashboard') {
+            return const DashboardScreen();
+          }
+          return const DashboardScreen();
         }
+
         // If no user is logged in, go to login page
         return const LoginPage();
       },
     );
+  }
+
+  @override
+  void dispose() {
+    // Save the current route when widget is disposed (app is closed)
+    if (ModalRoute.of(context)?.settings.name != null) {
+      _saveLastRoute(ModalRoute.of(context)!.settings.name!);
+    }
+    super.dispose();
   }
 }
