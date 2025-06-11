@@ -27,12 +27,13 @@ class _ReportsScreenState extends State<ReportsScreen> {
   bool _isLoading = false;
   bool _isSaving = false;
   bool _isSharing = false;
-  Uint8List? _logoBytes; // Stores the logo image bytes
+  Uint8List? _logoBytes;
+  bool _showCalendar = false; // To control calendar visibility
 
   @override
   void initState() {
     super.initState();
-    _loadLogo(); // Load the logo when the widget initializes
+    _loadLogo();
   }
 
   Future<void> _loadLogo() async {
@@ -49,60 +50,62 @@ class _ReportsScreenState extends State<ReportsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+        appBar: AppBar(
         automaticallyImplyLeading: false,
-        leading: IconButton(onPressed: (Navigator.of(context).pop), icon: Icon(Icons.arrow_back,color: Colors.white,)),
-        title: const Text('Decision Reports',style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
-        centerTitle: true,
-        backgroundColor: Colors.blueAccent,
-        actions: [
-          IconButton(
-            icon: _isSaving
-                ? const SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: Colors.white,
-              ),
-            )
-                : const Icon(Icons.save, color: Colors.white),
-            onPressed: _isLoading || _isSaving || _isSharing ? null : _savePdfReport,
-            tooltip: 'Save PDF',
-          ),
-          IconButton(
-            icon: _isSharing
-                ? const SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: Colors.white,
-              ),
-            )
-                : const Icon(Icons.share, color: Colors.white),
-            onPressed: _isLoading || _isSaving || _isSharing ? null : _sharePdfReport,
-            tooltip: 'Share PDF',
-          ),
-        ],
-      ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildQuickSelectionButtons(),
-            const SizedBox(height: 20),
-            _buildDateRangePicker(),
-            const SizedBox(height: 20),
-            if (_selectedDateRange != null) _buildDateRangeSummary(),
+          title: const Text('Decision Reports', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+          centerTitle: true,
+          backgroundColor: Colors.blueAccent,
+          actions: [
+            IconButton(
+              icon: _isSaving
+                  ? const SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+              )
+                  : const Icon(Icons.save, color: Colors.white),
+              onPressed: _isLoading || _isSaving || _isSharing ? null : _savePdfReport,
+              tooltip: 'Save PDF',
+            ),
+            IconButton(
+              icon: _isSharing
+                  ? const SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+              )
+                  : const Icon(Icons.share, color: Colors.white),
+              onPressed: _isLoading || _isSaving || _isSharing ? null : _sharePdfReport,
+              tooltip: 'Share PDF',
+            ),
           ],
-        ),
-      ),
+        leading: IconButton(
+        onPressed: () => Navigator.of(context).pop(),
+    icon: const Icon(Icons.arrow_back, color: Colors.white),
+
+    ),
+
+    ),
+      body: _isLoading
+    ? const Center(child: CircularProgressIndicator())
+        : SingleChildScrollView(
+    padding: const EdgeInsets.all(16),
+    child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+    _buildQuickSelectionButtons(),
+    const SizedBox(height: 20),
+    if (_showCalendar) _buildCalendarCard(),
+    if (_selectedDateRange != null) ...[
+    _buildDateRangeSummary(),
+    const SizedBox(height: 20),
+    _buildDecisionDetails(),
+    ],
+    ],
+    ),
+    ),
     );
-  }
+    }
 
   Widget _buildQuickSelectionButtons() {
     return Column(
@@ -116,35 +119,72 @@ class _ReportsScreenState extends State<ReportsScreen> {
         Row(
           children: [
             Expanded(
-              child: ElevatedButton.icon(
-                icon: const Icon(Icons.calendar_today, size: 18),
+              child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue[50],
                   foregroundColor: Colors.blueAccent,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
                 ),
                 onPressed: _selectLast7Days,
-                label: const Text('Last 7 Days'),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(Icons.calendar_today, size: 16),
+                    SizedBox(width: 5),
+                    Text('Last 7 Days', style: TextStyle(fontSize: 12)),
+                  ],
+                ),
               ),
             ),
-            const SizedBox(width: 10),
+            const SizedBox(width: 5),
             Expanded(
-              child: ElevatedButton.icon(
-                icon: const Icon(Icons.calendar_view_month, size: 18),
+              child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue[50],
                   foregroundColor: Colors.blueAccent,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
                 ),
                 onPressed: _selectLastMonth,
-                label: const Text('Last Month'),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(Icons.calendar_view_month, size: 18),
+                    SizedBox(width: 5),
+                    Text('Last Month', style: TextStyle(fontSize: 12)),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(width: 5),
+            Expanded(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue[50],
+                  foregroundColor: Colors.blueAccent,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                ),
+                onPressed: () => setState(() => _showCalendar = !_showCalendar),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.calendar_month, size: 18),
+                    const SizedBox(width: 3),
+                    Text(
+                      _showCalendar ? 'Select Date' : 'Hide Calendar',
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
         ),
+
       ],
     );
   }
 
-  Widget _buildDateRangePicker() {
+  Widget _buildCalendarCard() {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(
@@ -157,7 +197,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Custom Date Range:',
+              'Select Date Range:',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blueAccent),
             ),
             const SizedBox(height: 12),
@@ -165,10 +205,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
               selectionMode: DateRangePickerSelectionMode.range,
               onSelectionChanged: _onSelectionChanged,
               initialSelectedRange: _selectedDateRange != null
-                  ? PickerDateRange(
-                _selectedDateRange!.start,
-                _selectedDateRange!.end,
-              )
+                  ? PickerDateRange(_selectedDateRange!.start, _selectedDateRange!.end)
                   : null,
               maxDate: DateTime.now(),
               selectionColor: Colors.blueAccent,
@@ -228,6 +265,174 @@ class _ReportsScreenState extends State<ReportsScreen> {
             _buildSummaryRow('Total Decisions:', _decisions.length.toString()),
             _buildSummaryRow('Completed:', '$completed', Colors.green),
             _buildSummaryRow('Pending:', '$pending', Colors.orange),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDecisionDetails() {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: Colors.blue.shade100, width: 1),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.list_alt, color: Colors.blueAccent),
+                const SizedBox(width: 8),
+                Text(
+                  'Decision Details',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    color: Colors.blueAccent,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            if (_decisions.isEmpty)
+              const Center(
+                child: Text(
+                  'No decisions found in the selected date range',
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                ),
+              )
+            else
+              ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: _decisions.length,
+                separatorBuilder: (context, index) => const Divider(height: 16),
+                itemBuilder: (context, index) {
+                  final decision = _decisions[index];
+                  final date = DateTime.parse(decision['date']);
+                  final status = decision['finalOutcome']?.isNotEmpty == true
+                      ? 'Completed'
+                      : 'Pending';
+                  final outcome = decision['finalOutcome'];
+                  final expectedOutcome = decision['expectedOutcome'];
+                  final reason = decision['reason'];
+
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: Colors.blue[50],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              DateFormat('MMM d, yyyy').format(date),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blueAccent,
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: status == 'Completed'
+                                    ? Colors.green[100]
+                                    : Colors.orange[100],
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Text(
+                                status,
+                                style: TextStyle(
+                                  color: status == 'Completed'
+                                      ? Colors.green[800]
+                                      : Colors.orange[800],
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          decision['title'] ?? 'Untitled',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Divider(),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Reason: ',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color: Colors.blueGrey,
+                              ),
+                            ),
+                            Expanded(
+                              child: Text(
+                                reason,
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Divider(),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Expected Outcome: ',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color: Colors.blueGrey,
+                              ),
+                            ),
+                            Expanded(
+                              child: Text(
+                                expectedOutcome,
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Divider(),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Outcome: ',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color: Colors.blueGrey,
+                              ),
+                            ),
+                            Expanded(
+                              child: Text(
+                                outcome,
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                            ),
+                          ],
+                        ),
+
+
+                      ],
+                    ),
+                  );
+                },
+              ),
           ],
         ),
       ),
@@ -323,7 +528,13 @@ class _ReportsScreenState extends State<ReportsScreen> {
             final date = DateTime.parse(decision['date']);
             return date.isAfter(_selectedDateRange!.start.subtract(const Duration(days: 1))) &&
                 date.isBefore(_selectedDateRange!.end.add(const Duration(days: 1)));
-          }).toList();
+          }).toList()
+          // Add this sorting logic:
+            ..sort((a, b) {
+              final dateA = DateTime.parse(a['date']);
+              final dateB = DateTime.parse(b['date']);
+              return dateB.compareTo(dateA); // Newest first
+            });
           _isLoading = false;
         });
       } else {
@@ -340,6 +551,138 @@ class _ReportsScreenState extends State<ReportsScreen> {
     }
   }
 
+  // Future<pw.Document> _generatePdfDocument() async {
+  //   if (_selectedDateRange == null) {
+  //     throw Exception('Please select a date range first.');
+  //   }
+  //
+  //   final pdf = pw.Document();
+  //   final completed = _decisions.where((d) => d['finalOutcome']?.isNotEmpty == true).length;
+  //   final pending = _decisions.length - completed;
+  //
+  //   pw.Widget? logoWidget;
+  //   if (_logoBytes != null) {
+  //     logoWidget = pw.Container(
+  //       height: 60,
+  //       child: pw.Image(pw.MemoryImage(_logoBytes!)),
+  //     );
+  //   }
+  //
+  //   pdf.addPage(
+  //     pw.MultiPage(
+  //       pageFormat: PdfPageFormat.a4,
+  //       margin: const pw.EdgeInsets.all(24),
+  //       header: (pw.Context context) {
+  //         return pw.Container(
+  //           margin: const pw.EdgeInsets.only(bottom: 16),
+  //           child: pw.Column(
+  //             children: [
+  //               if (logoWidget != null) logoWidget,
+  //               pw.SizedBox(height: 10),
+  //               pw.Text(
+  //                 'Decision Report',
+  //                 style: pw.TextStyle(
+  //                   fontSize: 18,
+  //                   fontWeight: pw.FontWeight.bold,
+  //                   color: PdfColors.blue800,
+  //                 ),
+  //               ),
+  //               pw.Divider(thickness: 1, height: 16),
+  //             ],
+  //           ),
+  //         );
+  //       },
+  //       footer: (pw.Context context) {
+  //         return pw.Container(
+  //           margin: const pw.EdgeInsets.only(top: 16),
+  //           child: pw.Row(
+  //             mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+  //             children: [
+  //               pw.Text(
+  //                 'Generated on: ${DateFormat('MMMM d, yyyy').format(DateTime.now())}',
+  //                 style: const pw.TextStyle(fontSize: 10),
+  //               ),
+  //               pw.Text(
+  //                 'Page ${context.pageNumber} of ${context.pagesCount}',
+  //                 style: const pw.TextStyle(fontSize: 10),
+  //               ),
+  //             ],
+  //           ),
+  //         );
+  //       },
+  //       build: (pw.Context context) => [
+  //         pw.Column(
+  //           crossAxisAlignment: pw.CrossAxisAlignment.start,
+  //           children: [
+  //             pw.Text(
+  //               'Report Period: ${DateFormat('MMMM d, yyyy').format(_selectedDateRange!.start)} to ${DateFormat('MMMM d, yyyy').format(_selectedDateRange!.end)}',
+  //               style: const pw.TextStyle(fontSize: 12, color: PdfColors.grey600),
+  //             ),
+  //             pw.SizedBox(height: 20),
+  //             pw.Row(
+  //               mainAxisAlignment: pw.MainAxisAlignment.spaceEvenly,
+  //               children: [
+  //                 _buildStatCard('Total', _decisions.length.toString(), PdfColors.blue100),
+  //                 _buildStatCard('Completed', completed.toString(), PdfColors.green100),
+  //                 _buildStatCard('Pending', pending.toString(), PdfColors.orange100),
+  //               ],
+  //             ),
+  //             pw.SizedBox(height: 30),
+  //             pw.Text(
+  //               'Decision Details',
+  //               style: pw.TextStyle(
+  //                 fontSize: 16,
+  //                 fontWeight: pw.FontWeight.bold,
+  //                 color: PdfColors.blue800,
+  //               ),
+  //             ),
+  //             pw.SizedBox(height: 10),
+  //             if (_decisions.isEmpty)
+  //               pw.Padding(
+  //                 padding: const pw.EdgeInsets.all(20),
+  //                 child: pw.Center(
+  //                   child: pw.Text(
+  //                     'No decisions found in the selected date range',
+  //                     style: pw.TextStyle(fontSize: 14, color: PdfColors.grey600),
+  //                   ),
+  //                 ),
+  //               )
+  //             else
+  //               pw.TableHelper.fromTextArray(
+  //                 context: context,
+  //                 cellAlignment: pw.Alignment.centerLeft,
+  //                 headerStyle: pw.TextStyle(
+  //                   fontWeight: pw.FontWeight.bold,
+  //                   color: PdfColors.white,
+  //                 ),
+  //                 headerDecoration: pw.BoxDecoration(
+  //                   color: PdfColors.blue800,
+  //                   borderRadius: const pw.BorderRadius.all(pw.Radius.circular(4)),
+  //                 ),
+  //                 headers: ['Date', 'Title', 'Status', 'Outcome'],
+  //                 data: _decisions.map((decision) {
+  //                   return [
+  //                   DateFormat('MMM d, yyyy').format(DateTime.parse(decision['date'])),
+  //                   decision['title'] ?? 'Untitled',
+  //                   decision['finalOutcome']?.isNotEmpty == true
+  //                   ? pw.Text('Completed', style: pw.TextStyle(color: PdfColors.green))
+  //                       : pw.Text('Pending', style: pw.TextStyle(color: PdfColors.orange)),
+  //                   decision['finalOutcome'] ?? decision['expectedOutcome'] ?? 'N/A',
+  //                   ];
+  //                 }).toList(),
+  //                 cellPadding: const pw.EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+  //                 border: pw.TableBorder.all(color: PdfColors.grey300, width: 0.5),
+  //                 cellStyle: const pw.TextStyle(fontSize: 10),
+  //               ),
+  //           ],
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  //
+  //   return pdf;
+  // }
+
   Future<pw.Document> _generatePdfDocument() async {
     if (_selectedDateRange == null) {
       throw Exception('Please select a date range first.');
@@ -349,7 +692,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
     final completed = _decisions.where((d) => d['finalOutcome']?.isNotEmpty == true).length;
     final pending = _decisions.length - completed;
 
-    // Create a PDF logo widget if we have the logo bytes
     pw.Widget? logoWidget;
     if (_logoBytes != null) {
       logoWidget = pw.Container(
@@ -360,8 +702,11 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
     pdf.addPage(
       pw.MultiPage(
-        pageFormat: PdfPageFormat.a4,
-        margin: const pw.EdgeInsets.all(24),
+        pageFormat: PdfPageFormat.a4.copyWith(
+          marginTop: 36,
+          marginBottom: 36,
+        ),
+        margin: const pw.EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         header: (pw.Context context) {
           return pw.Container(
             margin: const pw.EdgeInsets.only(bottom: 16),
@@ -449,20 +794,38 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     color: PdfColors.blue800,
                     borderRadius: const pw.BorderRadius.all(pw.Radius.circular(4)),
                   ),
-                  headers: ['Date', 'Title', 'Status', 'Outcome'],
+                  headers: ['Date', 'Title', 'Reason', 'Expected Outcome', 'Status', 'Outcome'],
                   data: _decisions.map((decision) {
                     return [
                       DateFormat('MMM d, yyyy').format(DateTime.parse(decision['date'])),
                       decision['title'] ?? 'Untitled',
+                      pw.Text(
+                        decision['reason'] ?? 'N/A',
+                        style: const pw.TextStyle(fontSize: 8),
+                        maxLines: 2,
+                      ),
+                      pw.Text(
+                        decision['expectedOutcome'] ?? 'N/A',
+                        style: const pw.TextStyle(fontSize: 8),
+                        maxLines: 2,
+                      ),
                       decision['finalOutcome']?.isNotEmpty == true
-                          ? pw.Text('Completed', style: pw.TextStyle(color: PdfColors.green))
-                          : pw.Text('Pending', style: pw.TextStyle(color: PdfColors.orange)),
-                      decision['finalOutcome'] ?? decision['expectedOutcome'] ?? 'N/A',
+                          ? pw.Text('Completed', style: pw.TextStyle(color: PdfColors.green, fontSize: 9))
+                          : pw.Text('Pending', style: pw.TextStyle(color: PdfColors.orange, fontSize: 9)),
+                      decision['finalOutcome'] ?? 'N/A',
                     ];
                   }).toList(),
-                  cellPadding: const pw.EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+                  cellPadding: const pw.EdgeInsets.symmetric(vertical: 6, horizontal: 4),
                   border: pw.TableBorder.all(color: PdfColors.grey300, width: 0.5),
-                  cellStyle: const pw.TextStyle(fontSize: 10),
+                  cellStyle: const pw.TextStyle(fontSize: 9),
+                  columnWidths: {
+                    0: const pw.FlexColumnWidth(1.2),
+                    1: const pw.FlexColumnWidth(1.8),
+                    2: const pw.FlexColumnWidth(3.0),
+                    3: const pw.FlexColumnWidth(2.0),
+                    4: const pw.FlexColumnWidth(1.2),
+                    5: const pw.FlexColumnWidth(2.0),
+                  },
                 ),
             ],
           ),
