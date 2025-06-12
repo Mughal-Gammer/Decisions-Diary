@@ -312,14 +312,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.1"
-  lottie:
-    dependency: "direct main"
-    description:
-      name: lottie
-      sha256: c5fa04a80a620066c15cf19cc44773e19e9b38e989ff23ea32e5903ef1015950
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.3.1"
   matcher:
     dependency: transitive
     description:
@@ -677,14 +669,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.1"
-  syncfusion_flutter_charts:
-    dependency: "direct main"
-    description:
-      name: syncfusion_flutter_charts
-      sha256: "8c55049105f3939adfd8a913a5421154999f0dde4fd5472ab66f3d0f49d3a9a3"
-      url: "https://pub.dev"
-    source: hosted
-    version: "29.2.7"
   syncfusion_flutter_core:
     dependency: transitive
     description:
