@@ -379,7 +379,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
                         DataCell(
                           Tooltip(
                             message: status,
-                            child: Container(
+                            child:
+                            Container(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 8,
                                 vertical: 4,

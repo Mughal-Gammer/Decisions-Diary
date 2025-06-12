@@ -343,22 +343,43 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   if (decision.finalOutcome?.isNotEmpty == true)
                     Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
+                        horizontal: 2,
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.green.shade50,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: Colors.green.shade100),
+                        color: Colors.green.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: Colors.green.withOpacity(0.1),
+                        ),
                       ),
                       child: Text(
                         'Completed',
                         style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.green.shade800,
+                          color: Colors.green,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13
                         ),
                       ),
                     ),
+                    // Container(
+                    //   padding: const EdgeInsets.symmetric(
+                    //     horizontal: 8,
+                    //     vertical: 4,
+                    //   ),
+                    //   decoration: BoxDecoration(
+                    //     color: Colors.green.shade50,
+                    //     borderRadius: BorderRadius.circular(20),
+                    //     border: Border.all(color: Colors.green.shade100),
+                    //   ),
+                    //   child: Text(
+                    //     'Completed',
+                    //     style: TextStyle(
+                    //       fontSize: 12,
+                    //       color: Colors.green.shade800,
+                    //     ),
+                    //   ),
+                    // ),
                 ],
               ),
               const SizedBox(height: 12),
