@@ -271,6 +271,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
     );
   }
 
+
   Widget _buildDecisionDetails() {
     return Card(
       elevation: 4,
@@ -305,145 +306,105 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 ),
               )
             else
-              ListView.separated(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: _decisions.length,
-                separatorBuilder: (context, index) => const Divider(thickness: 2,color: Colors.blue, height: 16),
-                itemBuilder: (context, index) {
-                  final decision = _decisions[index];
-                  final date = DateTime.parse(decision['date']);
-                  final status = decision['finalOutcome']?.isNotEmpty == true
-                      ? 'Completed'
-                      : 'Pending';
-                  final outcome = decision['finalOutcome'];
-                  final expectedOutcome = decision['expectedOutcome'];
-                  final reason = decision['reason'];
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: DataTable(
+                  headingRowColor: MaterialStateProperty.resolveWith<Color>(
+                        (states) => Colors.blueAccent,
+                  ),
+                  columns: const [
+                    DataColumn(label: Text('Date', style: TextStyle(color: Colors.white))),
+                    DataColumn(label: Text('Title', style: TextStyle(color: Colors.white))),
+                    DataColumn(label: Text('Reason', style: TextStyle(color: Colors.white))),
+                    DataColumn(label: Text('Expected', style: TextStyle(color: Colors.white))),
+                    DataColumn(label: Text('Final', style: TextStyle(color: Colors.white))),
+                    DataColumn(label: Text('Status', style: TextStyle(color: Colors.white))),
+                  ],
+                  rows: _decisions.map((decision) {
+                    final date = DateTime.parse(decision['date']);
+                    final status = decision['finalOutcome']?.isNotEmpty == true
+                        ? 'Completed'
+                        : 'Pending';
+                    final statusColor = status == 'Completed'
+                        ? Colors.green
+                        : Colors.orange;
+                    final expectedOutcome = decision['expectedOutcome'] ?? 'N/A';
+                    final finalOutcome = decision['finalOutcome'] ?? 'N/A';
+                    final reason = decision['reason'] ?? 'N/A';
 
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: Colors.blue[50],
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    padding: const EdgeInsets.all(12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              DateFormat('MMM d, yyyy').format(date),
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blueAccent,
-                              ),
+                    return DataRow(
+                      cells: [
+                        DataCell(
+                          Tooltip(
+                            message: DateFormat('MMMM d, yyyy - hh:mm a').format(date),
+                            child: Text(DateFormat('MMM d, yyyy').format(date)),
+                          ),
+                        ),
+                        DataCell(
+                          SizedBox(
+                            width: 150, // Fixed width for title
+                            child: Text(
+                              decision['title'] ?? 'Untitled',
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            Container(
+                          ),
+                        ),
+                        DataCell(
+                          SizedBox(
+                            width: 200, // Fixed width for reason
+                            child: Text(
+                              reason,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ),
+                        DataCell(
+                          SizedBox(
+                            width: 150, // Fixed width for expected outcome
+                            child: Text(
+                              expectedOutcome,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ),
+                        DataCell(
+                          SizedBox(
+                            width: 150, // Fixed width for final outcome
+                            child: Text(
+                              finalOutcome,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ),
+                        DataCell(
+                          Tooltip(
+                            message: status,
+                            child: Container(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 4),
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
                               decoration: BoxDecoration(
-                                color: status == 'Completed'
-                                    ? Colors.green[100]
-                                    : Colors.orange[100],
+                                color: statusColor.withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: statusColor.withOpacity(0.3),
+                                ),
                               ),
                               child: Text(
                                 status,
                                 style: TextStyle(
-                                  color: status == 'Completed'
-                                      ? Colors.green[800]
-                                      : Colors.orange[800],
+                                  color: statusColor,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          decision['title'] ?? 'Untitled',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black,
                           ),
                         ),
-                        const SizedBox(height: 8),
-                        Divider(),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Reason: ',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                color: Colors.blueGrey,
-                              ),
-                            ),
-                            Expanded(
-                              child: Text(
-                                reason,
-                                style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black,
-
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Divider(),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Expected Outcome: ',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                color: Colors.blueGrey,
-                              ),
-                            ),
-                            Expanded(
-                              child: Text(
-                                expectedOutcome,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black,
-
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Divider(),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Outcome: ',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                color: Colors.blueGrey,
-                              ),
-                            ),
-                            Expanded(
-                              child: Text(
-                                outcome,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-
-
                       ],
-                    ),
-                  );
-                },
+                    );
+                  }).toList(),
+                ),
               ),
           ],
         ),
